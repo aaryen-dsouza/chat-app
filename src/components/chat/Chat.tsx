@@ -1,9 +1,15 @@
 import EmojiPicker from "emoji-picker-react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Chat() {
 const [openEmoji, setEmojiOpen] = useState<boolean>(false);
 const [text, setText] = useState("")
+
+const endRef = useRef(null);
+
+useEffect(() => {
+  endRef.current?.scrollIntoView({behavior:"smooth"})
+}, [])
 
 const handleEmoji = (e: Object) => {
   console.log(e);
@@ -48,12 +54,14 @@ setEmojiOpen(false);
           </div>
         </div>
         <div className="message own max-w-[70%] flex gap-5">
-          <div className="texts">
-            <img className="w-full flex flex-col gap-1.5 object-cover" src="" alt="" />
+          <div className="texts flex-1 flex flex-col gap-1.5">
+            {/* <img className="w-full h-[300px] rounded-lg gap-1.5 object-cover" src="https://images.pexels.com/photos/27383302/pexels-photo-27383302/free-photo-of-a-lamp-with-a-wooden-base-and-a-lampshade.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="" /> */}
+            <img className="w-full h-[300px] rounded-lg object-cover" src="https://images.pexels.com/photos/27906198/pexels-photo-27906198/free-photo-of-portrait-white-dress.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="" />
             <p className="rounded-lg">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repudiandae minus dolor ducimus ipsam! Beatae adipisci odio dolorem amet voluptate at exercitationem rem repellat doloremque non?</p>
             <span className="text-xs">1 min ago</span>
           </div>
         </div>
+        <div ref={endRef}></div>
       </div>
       <div className="bottom px-5 py-2 flex items-center justify-between border-t-2 border-slate-800 gap-5 mt-auto">
         <div className="icons flex gap-5">
