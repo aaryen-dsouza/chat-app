@@ -9,7 +9,7 @@ import Login from "./components/login/Login";
 import Notification from "./components/notification/Notification";
 
 function App() {
-  const user = false;
+  const user: boolean = true;
 
   return (
     <div className="w-[80vw] h-[90vh] bg-chatscreen backdropFilterSat rounded-xl border-2 border-solid border-slate-50/[.125] flex">
