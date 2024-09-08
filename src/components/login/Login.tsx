@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, ChangeEventHandler, useState } from "react";
 import { toast } from "react-toastify";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../lib/firebase"
+import { doc, setDoc } from "firebase/firestore";
+import upload from "../../lib/upload";
 
 interface avatarInterface {
-  file: null | React.ChangeEvent<HTMLInputElement>;
-  url: null | string;
+  file: File | null;
+  url: string | null;
 }
+
+// interface HTMLInputEvent extends Event {
+//   target: HTMLInputElement & EventTarget;
+// }
 
 function Login() {
   const [avatar, setAvatar] = useState<avatarInterface>({
@@ -12,7 +20,11 @@ function Login() {
     url: "",
   });
 
-  const handleAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [registerLoading, setRegisterLoading] = useState<boolean>(false) 
+  const [loginLoading, setLoginLoading] = useState<boolean>(false) 
+
+  const handleAvatar : ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
     if (e.target.files[0]) {
       setAvatar({
         file: e.target.files[0],
@@ -21,10 +33,60 @@ function Login() {
     }
   };
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoginLoading(true);
     e.preventDefault();
-    toast.success("Hello")
+
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const {email, password} = Object.fromEntries(formData);
+
+    try{
+await signInWithEmailAndPassword(auth, email as string, password as string )
+    } catch(err) {
+      if(err instanceof Error) {
+        toast.error(err.message)
+      }
+    }
+    finally{
+      setLoginLoading(false)
+    }
   }
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    setRegisterLoading(true);
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const {username, email, password} = Object.fromEntries(formData);
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email as string, password as string);
+
+      const imgUrl = await upload(avatar.file)
+
+      await setDoc(doc(db, "users", res.user.uid), {
+        username,
+        email,
+        avatar: imgUrl,
+        id: res.user.uid,
+        blocked: [],
+      });
+
+      await setDoc(doc(db, "userChats", res.user.uid), {
+        chats:[]
+      });
+
+      toast.success("Account has been created! You can login now!")
+    } catch(err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message)
+      };
+      
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
 
   return (
     <div className="login w-full h-full flex items-center gap-[100px]">
@@ -35,27 +97,25 @@ function Login() {
           action=""
           onSubmit={(handleLogin)}
         >
-          {/* <label htmlFor="email">Email</label> */}
           <input
             className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
             type="email"
             placeholder="Email or Username"
             name="email"
           />
-          {/* <label htmlFor="password">Password</label> */}
           <input
             className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
             type="password"
             placeholder="Password"
             name="password"
           />
-          <button className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium">Login</button>
+          <button disabled={loginLoading} className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300">{loginLoading? "Loading" : "Login"}</button>
         </form>
       </div>
       <div className="seperator h-[80%] w-[0.5px] bg-slate-500"></div>
       <div className="item flex-1 flex flex-col items-center gap-5">
         <h2 className="font-bold text-2xl">Create an account</h2>
-        <form
+        <form onSubmit={handleRegister}
           className="flex flex-col items-center justify-center gap-5"
           action=""
         >
@@ -94,7 +154,7 @@ function Login() {
             placeholder="Password"
             name="password"
           />
-          <button className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium">Sign up</button>
+          <button disabled={registerLoading} className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300">{registerLoading ? "Loading" : "Sign up"}</button>
         </form>
       </div>
     </div>
