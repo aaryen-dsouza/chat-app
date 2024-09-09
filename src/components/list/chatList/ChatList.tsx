@@ -3,6 +3,7 @@ import AddUser from "./addUser/AddUser";
 import { useUserStore } from "../../../lib/userStore";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { useChatStore } from "../../../lib/chatStore";
 
 interface User {
   username: string;
@@ -25,6 +26,7 @@ function ChatList() {
   const [addMode, setAddMode] = useState<boolean>(false);
 
   const { currentUser } = useUserStore();
+  const { changeChat } = useChatStore();
 
   useEffect(() => {
     const unSub = onSnapshot(
@@ -49,6 +51,12 @@ function ChatList() {
     };
   }, [currentUser?.id]);
 
+  
+
+  async function handleSelect(chat: ChatItem) : Promise<void> {
+    changeChat(chat.chatId, chat.user)
+  }
+
   // console.log(chats);
 
   return (
@@ -72,7 +80,7 @@ function ChatList() {
       {chats.map((chat) => (
         <div
           className="flex items-center gap-5 p-3 cursor-pointer border-b-2 border-slate-800"
-          key={chat.chatId}
+          key={chat.chatId} onClick={() => handleSelect(chat)}
         >
           <img
             className="w-[50px] h-[50px] rounded-full object-cover"

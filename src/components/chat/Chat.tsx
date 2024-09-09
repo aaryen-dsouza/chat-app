@@ -1,9 +1,25 @@
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
+import { db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
+
+interface Message {
+  text: string;
+  img?: string;
+  createdAt: number;
+}
+
+interface Chat {
+  messages: Message[];
+}
 
 function Chat() {
   const [openEmoji, setEmojiOpen] = useState<boolean>(false);
+  const [chat, setChat] = useState<Chat | undefined>(undefined);
   const [text, setText] = useState("");
+
+  const { chatId } = useChatStore();
 
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -17,6 +33,22 @@ function Chat() {
     setText((prev) => prev + e.emoji);
     setEmojiOpen(false);
   };
+
+  useEffect(() => {
+
+    if (!chatId) return;
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      const chatData = res.data() as Chat | undefined;
+      setChat(chatData);
+    })
+
+    return () => {
+      unSub();
+    }
+  }, [chatId]);
+
+  console.log(chat);
+  
 
   return (
     <div className="chatFlex border-l-2 border-r-2 border-slate-800 h-full flex flex-col">
@@ -41,56 +73,25 @@ function Chat() {
         </div>
       </div>
       <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-5">
-        <div className="message max-w-[70%] flex gap-5">
-          <div className="texts">
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Repudiandae minus dolor ducimus ipsam! Beatae adipisci odio
-              dolorem amet voluptate at exercitationem rem repellat doloremque
-              non?
-            </p>
-            <span className="text-xs">1 min ago</span>
-          </div>
-        </div>
-        <div className="message own max-w-[70%] flex gap-5">
-          <div className="texts flex-1 flex flex-col gap-1.5">
-            <p className="rounded-lg">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Repudiandae minus dolor ducimus ipsam! Beatae adipisci odio
-              dolorem amet voluptate at exercitationem rem repellat doloremque
-              non?
-            </p>
-            <span className="text-xs">1 min ago</span>
-          </div>
-        </div>
-        <div className="message max-w-[70%] flex gap-5">
-          <div className="texts">
-            <p className="rounded-lg">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Repudiandae minus dolor ducimus ipsam! Beatae adipisci odio
-              dolorem amet voluptate at exercitationem rem repellat doloremque
-              non?
-            </p>
-            <span className="text-xs">1 min ago</span>
-          </div>
-        </div>
-        <div className="message own max-w-[70%] flex gap-5">
+        {chat?.messages.map((message)=> (
+
+        
+        <div className="message own max-w-[70%] flex gap-5" key={message?.createdAt}>
           <div className="texts flex-1 flex flex-col gap-1.5">
             {/* <img className="w-full h-[300px] rounded-lg gap-1.5 object-cover" src="https://images.pexels.com/photos/27383302/pexels-photo-27383302/free-photo-of-a-lamp-with-a-wooden-base-and-a-lampshade.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="" /> */}
-            <img
+            {/* <img
               className="w-full h-[300px] rounded-lg object-cover"
               src="https://images.pexels.com/photos/27906198/pexels-photo-27906198/free-photo-of-portrait-white-dress.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
               alt=""
-            />
+            /> */}
+            {message.img && <img src={message.img} className="w-full h-[300px] rounded-lg object-cover" />}
             <p className="rounded-lg">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Repudiandae minus dolor ducimus ipsam! Beatae adipisci odio
-              dolorem amet voluptate at exercitationem rem repellat doloremque
-              non?
+              {message.text}
             </p>
-            <span className="text-xs">1 min ago</span>
+            {/* <span className="text-xs">1 min ago</span> */}
           </div>
         </div>
+        ))}
         <div ref={endRef}></div>
       </div>
       <div className="bottom px-5 py-2 flex items-center justify-between border-t-2 border-slate-800 gap-5 mt-auto">
