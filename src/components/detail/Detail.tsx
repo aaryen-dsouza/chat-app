@@ -1,3 +1,4 @@
+import { auth } from "../../lib/firebase";
 
 function Detail() {
   return (
@@ -51,7 +52,7 @@ function Detail() {
       </div>
       <div className="flex flex-col items-center gap-3.5">
       <button className="py-1.5 w-3/5 bg-red-500 hover:bg-red-800 text-white border-none rounded cursor-pointer">Block User</button>
-      <button className="py-1.5 w-3/5 bg-blue-500 hover:bg-blue-800 text-white border-none rounded cursor-pointer">Logout</button>
+      <button className="py-1.5 w-3/5 bg-blue-500 hover:bg-blue-800 text-white border-none rounded cursor-pointer" onClick={() => auth.signOut()}>Logout</button>
       </div>
         
     </div>

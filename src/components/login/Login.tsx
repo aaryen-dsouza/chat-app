@@ -1,7 +1,10 @@
 import React, { ChangeEvent, ChangeEventHandler, useState } from "react";
 import { toast } from "react-toastify";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../lib/firebase"
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import upload from "../../lib/upload";
 
@@ -20,10 +23,12 @@ function Login() {
     url: "",
   });
 
-  const [registerLoading, setRegisterLoading] = useState<boolean>(false) 
-  const [loginLoading, setLoginLoading] = useState<boolean>(false) 
+  const [registerLoading, setRegisterLoading] = useState<boolean>(false);
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
 
-  const handleAvatar : ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAvatar: ChangeEventHandler = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
     if (!e.target.files) return;
     if (e.target.files[0]) {
       setAvatar({
@@ -39,31 +44,38 @@ function Login() {
 
     const formData = new FormData(e.target as HTMLFormElement);
 
-    const {email, password} = Object.fromEntries(formData);
+    const { email, password } = Object.fromEntries(formData);
 
-    try{
-await signInWithEmailAndPassword(auth, email as string, password as string )
-    } catch(err) {
-      if(err instanceof Error) {
-        toast.error(err.message)
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        email as string,
+        password as string
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
       }
+    } finally {
+      setLoginLoading(false);
     }
-    finally{
-      setLoginLoading(false)
-    }
-  }
+  };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     setRegisterLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
 
-    const {username, email, password} = Object.fromEntries(formData);
+    const { username, email, password } = Object.fromEntries(formData);
 
     try {
-      const res = await createUserWithEmailAndPassword(auth, email as string, password as string);
+      const res = await createUserWithEmailAndPassword(
+        auth,
+        email as string,
+        password as string
+      );
 
-      const imgUrl = await upload(avatar.file)
+      const imgUrl = await upload(avatar.file);
 
       await setDoc(doc(db, "users", res.user.uid), {
         username,
@@ -74,15 +86,14 @@ await signInWithEmailAndPassword(auth, email as string, password as string )
       });
 
       await setDoc(doc(db, "userChats", res.user.uid), {
-        chats:[]
+        chats: [],
       });
 
-      toast.success("Account has been created! You can login now!")
-    } catch(err: unknown) {
+      toast.success("Account has been created! You can login now!");
+    } catch (err: unknown) {
       if (err instanceof Error) {
-        toast.error(err.message)
-      };
-      
+        toast.error(err.message);
+      }
     } finally {
       setRegisterLoading(false);
     }
@@ -95,7 +106,7 @@ await signInWithEmailAndPassword(auth, email as string, password as string )
         <form
           className="flex flex-col items-center justify-center gap-5"
           action=""
-          onSubmit={(handleLogin)}
+          onSubmit={handleLogin}
         >
           <input
             className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
@@ -109,13 +120,19 @@ await signInWithEmailAndPassword(auth, email as string, password as string )
             placeholder="Password"
             name="password"
           />
-          <button disabled={loginLoading} className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300">{loginLoading? "Loading" : "Login"}</button>
+          <button
+            disabled={loginLoading}
+            className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300"
+          >
+            {loginLoading ? "Loading" : "Login"}
+          </button>
         </form>
       </div>
       <div className="seperator h-[80%] w-[0.5px] bg-slate-500"></div>
       <div className="item flex-1 flex flex-col items-center gap-5">
         <h2 className="font-bold text-2xl">Create an account</h2>
-        <form onSubmit={handleRegister}
+        <form
+          onSubmit={handleRegister}
           className="flex flex-col items-center justify-center gap-5"
           action=""
         >
@@ -154,7 +171,12 @@ await signInWithEmailAndPassword(auth, email as string, password as string )
             placeholder="Password"
             name="password"
           />
-          <button disabled={registerLoading} className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300">{registerLoading ? "Loading" : "Sign up"}</button>
+          <button
+            disabled={registerLoading}
+            className="px-8 py-2 border-none bg-blue-500 text-white rounded cursor-pointer font-medium disabled:cursor-not-allowed disabled:bg-blue-300"
+          >
+            {registerLoading ? "Loading" : "Sign up"}
+          </button>
         </form>
       </div>
     </div>
