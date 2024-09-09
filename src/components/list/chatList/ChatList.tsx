@@ -4,11 +4,20 @@ import { useUserStore } from "../../../lib/userStore";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 
+interface User {
+  username: string;
+  email: string;
+  avatar: string;
+  id: string;
+  blocked: string[];
+}
+
 interface ChatItem {
   receiverId: string;
   chatId: string;
   lastMessage: string;
   updatedAt: number;
+  user: User;
 }
 
 function ChatList() {
@@ -40,7 +49,7 @@ function ChatList() {
     };
   }, [currentUser?.id]);
 
-  console.log(chats);
+  // console.log(chats);
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -67,18 +76,18 @@ function ChatList() {
         >
           <img
             className="w-[50px] h-[50px] rounded-full object-cover"
-            src="./avatar.png"
+            src={chat.user.avatar || "./avatar.png"}
             alt=""
           />
           <div className="flex flex-col gap-0.5">
-            <span className="font-medium">Aaryen D</span>
+            <span className="font-medium">{chat.user.username}</span>
             <p className="text-sm font-normal text-textSub">
               {chat.lastMessage}
             </p>
           </div>
         </div>
       ))}
-      {addMode && <AddUser />}
+      {addMode && <AddUser setAddMode={setAddMode} />}
     </div>
   );
 }
