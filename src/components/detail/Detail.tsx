@@ -1,11 +1,34 @@
-import { auth } from "../../lib/firebase";
+import { auth, db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
+import { useUserStore } from "../../lib/userStore";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 function Detail() {
+  const { user , isCurrentUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
+
+  const {currentUser} = useUserStore();
+
+  const handleBlock = async (): Promise<void> => {
+    if(!user) return;
+
+    const userDocRef = doc(db, "users", currentUser!.id);
+
+    try {
+      await updateDoc(userDocRef, {
+        blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id)
+      })
+
+      changeBlock()
+    } catch (error) {
+      if(error instanceof Error) console.log(error);
+    }
+  }
+
   return (
     <div className="detailFlex">
       <div className="user px-7 py-5 flex flex-col items-center gap-3 border-b-2 border-slate-800">
-        <img className="w-[100px] h-[100px] rounded-full object-cover" src="./avatar.png" alt="" />
-        <h2 className="text-xl font-bold">Aaryen D</h2>
+        <img className="w-[100px] h-[100px] rounded-full object-cover" src={user?.avatar || "./avatar.png"} alt="" />
+        <h2 className="text-xl font-bold">{user?.username}</h2>
         <p className="text-sm">Lorem ipsum dolor sit amet.</p>
       </div>
       <div className="info p-5 flex flex-col gap-5">
@@ -51,7 +74,7 @@ function Detail() {
         </div>
       </div>
       <div className="flex flex-col items-center gap-3.5">
-      <button className="py-1.5 w-3/5 bg-red-500 hover:bg-red-800 text-white border-none rounded cursor-pointer">Block User</button>
+      <button className="py-1.5 w-3/5 bg-red-500 hover:bg-red-800 text-white border-none rounded cursor-pointer" onClick={handleBlock}>{isCurrentUserBlocked ? "You are Blocked!": isReceiverBlocked ? "User blocked" : "Block User"}</button>
       <button className="py-1.5 w-3/5 bg-blue-500 hover:bg-blue-800 text-white border-none rounded cursor-pointer" onClick={() => auth.signOut()}>Logout</button>
       </div>
         

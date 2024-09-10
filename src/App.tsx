@@ -26,7 +26,7 @@ const {chatId} = useChatStore();
   }, [fetchUserInfo]);
 
 
-  console.log(currentUser);
+  // console.log(currentUser);
   
 if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscreen">Loading...</div>
 
