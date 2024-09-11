@@ -25,6 +25,7 @@ interface ChatItem {
 
 function ChatList() {
   const [chats, setChats] = useState<ChatItem[]>([]);
+  const [filteredChats, setFilteredChats] = useState<ChatItem[]>([]);
   const [addMode, setAddMode] = useState<boolean>(false);
   const [input, setInput] = useState("");
 
@@ -45,6 +46,8 @@ function ChatList() {
           return { ...item, user };
         });
         const chatData = await Promise.all(promises);
+        // console.log(chatData);
+
         setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
       }
     );
@@ -82,11 +85,23 @@ function ChatList() {
     }
   }
 
-  // console.log(chats);
+  useEffect(() => {
+    console.log("triggered");
 
-  const filteredChats = chats.filter((c) =>
-    c.username.toLowerCase().includes(input.toLowerCase())
-  );
+    if (input) {
+      const filtered = chats.filter((c) =>
+        c.user.username
+          ? c.user.username.toLowerCase().includes(input.toLowerCase())
+          : false
+      );
+
+      setFilteredChats(filtered);
+    } else {
+      setFilteredChats(chats);
+    }
+  }, [input, chats]);
+
+  // console.log(chats);
 
   return (
     <div className="flex-1 overflow-y-auto">
