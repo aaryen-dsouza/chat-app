@@ -28,10 +28,10 @@ const {chatId} = useChatStore();
 
   // console.log(currentUser);
   
-if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscreen">Loading...</div>
+if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscreen2">Loading...</div>
 
   return (
-    <div className="w-[80vw] h-[90vh] bg-chatscreen backdropFilterSat rounded-xl border-2 border-solid border-slate-50/[.125] flex">
+    <div className="w-[80vw] max-w-[1550px] h-[90vh] bg-chatscreen2 rounded-xl flex">
       {currentUser ? (
         <>
           <List />

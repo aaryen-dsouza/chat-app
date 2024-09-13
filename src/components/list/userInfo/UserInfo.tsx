@@ -12,7 +12,7 @@ function UserInfo() {
       </div>
       <div className='flex gap-5'>
         <img className='w-5 h-5 cursor-pointer' src="./more.png" alt="" />
-        <img className='w-5 h-5 cursor-pointer' src="./video.png" alt="" />
+        <img className='w-5 h-5 cursor-pointer hidden' src="./video.png" alt="" />
         <img className='w-5 h-5 cursor-pointer' src="./edit.png" alt="" />
       </div>
     </div>

@@ -122,13 +122,13 @@ function Login() {
           onSubmit={handleLogin}
         >
           <input
-            className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
+            className="px-8 py-3 border-none outline-none bg-background text-white rounded"
             type="email"
             placeholder="Email or Username"
             name="email"
           />
           <input
-            className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
+            className="px-8 py-3 border-none outline-none bg-background text-white rounded"
             type="password"
             placeholder="Password"
             name="password"
@@ -167,19 +167,19 @@ function Login() {
             onChange={handleAvatar}
           />
           <input
-            className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
+            className="px-8 py-3 border-none outline-none bg-background text-white rounded"
             type="text"
             placeholder="Username"
             name="username"
           />
           <input
-            className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
+            className="px-8 py-3 border-none outline-none bg-background text-white rounded"
             type="email"
             placeholder="Email"
             name="email"
           />
           <input
-            className="px-8 py-3 border-none outline-none bg-chatscreen text-white rounded"
+            className="px-8 py-3 border-none outline-none bg-background text-white rounded"
             type="password"
             placeholder="Password"
             name="password"

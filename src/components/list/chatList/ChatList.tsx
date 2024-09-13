@@ -105,7 +105,7 @@ function ChatList() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="flex items-center gap-5 p-5 border-b-2 border-slate-800">
+      <div className="flex items-center gap-5 p-5 border-b-2 border-none">
         <div className="flex-1 bg-searchBar flex items-center gap-5 rounded-lg p-2.5">
           <img className="w-5 h-5" src="./search.png" alt="" />
           <input
@@ -122,10 +122,11 @@ function ChatList() {
           alt=""
         />
       </div>
+      <div className="flex flex-col">
       {filteredChats.map((chat) => (
         <div
-          className={`flex items-center gap-5 p-3 cursor-pointer border-b-2 border-slate-800 ${
-            chat?.isSeen ? "bg-transparent" : "bg-blue-400"
+          className={`flex self-center hover:bg-searchBar w-[90%] items-center gap-5 px-5 py-3 cursor-pointer border-b-2 border-none rounded-2xl ${
+            chat?.isSeen ? "bg-transparent" : "bg-blue-400 "
           }`}
           key={chat.chatId}
           onClick={() => handleSelect(chat)}
@@ -151,6 +152,7 @@ function ChatList() {
           </div>
         </div>
       ))}
+      </div>
       {addMode && <AddUser setAddMode={setAddMode} />}
     </div>
   );

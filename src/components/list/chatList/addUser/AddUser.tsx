@@ -105,7 +105,7 @@ try {
   }
 
   return (
-    <div className="addUser w-max h-max p-7 bg-background rounded-md absolute top-0 bottom-0 left-0 right-0 m-auto">
+    <div className="addUser w-max h-max p-7 addUserBDF rounded-md absolute top-0 bottom-0 left-0 right-0 m-auto z-10 ">
       <form action="" className="flex gap-5" onSubmit={handleSearch}>
         <input
           type="text"

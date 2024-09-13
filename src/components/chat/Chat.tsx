@@ -1,4 +1,6 @@
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 import {
   arrayUnion,
   doc,
@@ -60,7 +62,7 @@ function Chat() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [chat?.messages]);
 
   const handleEmoji = (e: EmojiClickData) => {
     console.log(e);
@@ -139,6 +141,13 @@ function Chat() {
     setText("");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && text.trim()) {
+      e.preventDefault();
+      handleMessageSend();
+    }
+  };
+
   const handleImg: ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     if (e.target.files[0]) {
@@ -152,11 +161,12 @@ function Chat() {
   // console.log(chat);
 
   return (
-    <div className="chatFlex border-l-2 border-r-2 border-slate-800 h-full flex flex-col">
-      <div className="top px-4 py-2 flex items-center justify-between border-b-2 border-slate-800">
+    <PerfectScrollbar>
+<div className="chatFlex border-l-2 border-r-2 border-none h-full flex flex-col">
+      <div className="top px-4 pt-5 pb-3 flex items-center justify-between border-b-2 border-none">
         <div className="user flex items-center gap-5">
           <img
-            className="w-[60px] h-[60px] rounded-full object-cover"
+            className="w-[45px] h-[45px] rounded-full object-cover"
             src={user?.avatar || "./avatar.png"}
             alt=""
           />
@@ -168,12 +178,12 @@ function Chat() {
           </div>
         </div>
         <div className="icons flex gap-5">
-          <img className="w-5 h-5" src="./phone.png" alt="" />
-          <img className="w-5 h-5" src="./video.png" alt="" />
+          <img className="w-5 h-5 hidden" src="./phone.png" alt="" />
+          <img className="w-5 h-5 hidden" src="./video.png" alt="" />
           <img className="w-5 h-5" src="./info.png" alt="" />
         </div>
       </div>
-      <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-5">
+      <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-2">
         {chat?.messages.map((message) => (
           <div
             className={`${
@@ -191,10 +201,10 @@ function Chat() {
               {message.img && (
                 <img
                   src={message.img}
-                  className="w-full h-[300px] rounded-lg object-cover"
+                  className="max-w-[380px] max-h-[244px] rounded-lg object-cover"
                 />
               )}
-              <p className="rounded-lg">{message.text}</p>
+              <p className="rounded-lg max-w-fit">{message.text}</p>
               {/* <span className="text-xs">1 min ago</span> */}
             </div>
           </div>
@@ -208,7 +218,7 @@ function Chat() {
         )}
         <div ref={endRef}></div>
       </div>
-      <div className="bottom px-5 py-2 flex items-center justify-between border-t-2 border-slate-800 gap-5 mt-auto">
+      <div className="bottom px-5 py-2 flex items-center justify-between border-t-2 border-none gap-5 mt-auto">
         <div className="icons flex gap-5">
           <label htmlFor="file">
             <img className="w-5 h-5 cursor-pointer" src="./img.png" alt="" />
@@ -219,8 +229,8 @@ function Chat() {
             id="file"
             onChange={handleImg}
           />
-          <img className="w-5 h-5 cursor-pointer" src="./camera.png" alt="" />
-          <img className="w-5 h-5 cursor-pointer" src="./mic.png" alt="" />
+          <img className="w-5 h-5 cursor-pointer hidden" src="./camera.png" alt="" />
+          <img className="w-5 h-5 cursor-pointer hidden" src="./mic.png" alt="" />
         </div>
         <input
           className="flex-1 bg-searchBar border-none outline-none text-white p-4 text-base rounded-lg disabled:cursor-not-allowed"
@@ -232,6 +242,7 @@ function Chat() {
           }
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
           disabled={isCurrentUserBlocked || isReceiverBlocked}
         />
         <div className="emoji relative">
@@ -254,6 +265,8 @@ function Chat() {
         </button>
       </div>
     </div>
+    </PerfectScrollbar>
+    
   );
 }
 
