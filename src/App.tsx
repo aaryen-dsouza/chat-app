@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chat from "./components/chat/Chat";
 import Detail from "./components/detail/Detail";
 import List from "./components/list/List";
@@ -14,6 +14,8 @@ function App() {
 const {currentUser, isLoading, fetchUserInfo} = useUserStore();
 
 const {chatId} = useChatStore();
+
+const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
@@ -35,8 +37,8 @@ if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscre
       {currentUser ? (
         <>
           <List />
-          {chatId && <Chat />}
-          {chatId && <Detail />}
+          {chatId && <Chat setIsDetailOpen={setIsDetailOpen} />}
+          {chatId && <Detail isDetailOpen={isDetailOpen} />}
         </>
       ) : (
         <Login />

@@ -41,7 +41,11 @@ interface UserChatsData {
   chats: ChatData[];
 }
 
-function Chat() {
+interface ChatProps {
+  setIsDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function Chat({setIsDetailOpen}: ChatProps) {
   const [openEmoji, setEmojiOpen] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat | undefined>(undefined);
   const [text, setText] = useState("");
@@ -157,8 +161,9 @@ function Chat() {
     }
   };
 
+
   const infoDetailHandler = (): void  => {
-    
+    setIsDetailOpen((prev: boolean) => !prev);
   }
 
   // console.log(chat);
@@ -182,7 +187,7 @@ function Chat() {
         <div className="icons flex gap-5">
           <img className="w-5 h-5 hidden" src="./phone.png" alt="" />
           <img className="w-5 h-5 hidden" src="./video.png" alt="" />
-          <img className="w-5 h-5" src="./info.png" onClick={infoDetailHandler} alt="" />
+          <img className="w-5 h-5 cursor-pointer" src="./info.png" onClick={infoDetailHandler} alt="" />
         </div>
       </div>
       <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-2">

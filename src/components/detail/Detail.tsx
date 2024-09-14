@@ -3,7 +3,11 @@ import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
-function Detail() {
+interface DetailProps {
+  isDetailOpen: boolean;
+}
+
+function Detail({isDetailOpen}: DetailProps) {
   const { user , isCurrentUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
 
   const {currentUser} = useUserStore();
@@ -24,8 +28,10 @@ function Detail() {
     }
   }
 
+  
+
   return (
-    <div className="detailFlex w-[15%] hidden">
+    <div className={`detailFlex w-[15%] ${isDetailOpen ? "" : "hidden"}`}>
       <div className="user px-7 py-5 flex flex-col items-center gap-3 border-b-2 border-none">
         <img className="w-[100px] h-[100px] rounded-full object-cover" src={user?.avatar || "./avatar.png"} alt="" />
         <h2 className="text-xl font-bold">{user?.username}</h2>
