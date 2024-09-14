@@ -43,9 +43,10 @@ interface UserChatsData {
 
 interface ChatProps {
   setIsDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isDetailOpen: boolean;
 }
 
-function Chat({setIsDetailOpen}: ChatProps) {
+function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
   const [openEmoji, setEmojiOpen] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat | undefined>(undefined);
   const [text, setText] = useState("");
@@ -259,7 +260,7 @@ function Chat({setIsDetailOpen}: ChatProps) {
             alt=""
             onClick={() => setEmojiOpen((prev) => !prev)}
           />
-          <div className="picker absolute bottom-[50px] left-0">
+          <div className={`picker absolute bottom-[50px] ${isDetailOpen ? "left-0" : "right-0"} `}>
             <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
           </div>
         </div>

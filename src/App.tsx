@@ -37,7 +37,7 @@ if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscre
       {currentUser ? (
         <>
           <List />
-          {chatId && <Chat setIsDetailOpen={setIsDetailOpen} />}
+          {chatId && <Chat setIsDetailOpen={setIsDetailOpen} isDetailOpen={isDetailOpen} />}
           {chatId && <Detail isDetailOpen={isDetailOpen} />}
         </>
       ) : (
