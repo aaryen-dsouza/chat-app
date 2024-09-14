@@ -8,7 +8,7 @@ function UserInfo() {
     <div className='p-5 flex items-center justify-between'>
       <div className='flex items-center gap-5'>
         <img className='w-[50px] h-[50px] rounded-[50%] object-cover' src={currentUser?.avatar || "./avatar.png"} alt="" />
-        <h2 className='text-xl	font-medium'>{currentUser?.username}</h2>
+        <h2 className='text-xl	font-bold'>{currentUser?.username}</h2>
       </div>
       <div className='flex gap-5'>
         <img className='w-5 h-5 cursor-pointer' src="./more.png" alt="" />

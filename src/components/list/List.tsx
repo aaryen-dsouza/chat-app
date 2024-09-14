@@ -3,7 +3,7 @@ import ChatList from './chatList/ChatList'
 
 function List() {
   return (
-    <div className='listFlex flex flex-col'>
+    <div className='listFlex flex flex-col w-[25%]'>
       <UserInfo />
       <ChatList />
     </div>

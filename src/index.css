@@ -64,7 +64,7 @@ body {
 }
 
 .chatFlex {
-  flex: 2;
+  flex: 2.2;
 }
 
 .listFlex {
@@ -72,7 +72,7 @@ body {
 }
 
 .detailFlex {
-  flex: 1;
+  flex: 0.8;
 }
 
 .message {

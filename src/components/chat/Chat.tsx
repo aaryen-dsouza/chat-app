@@ -1,5 +1,4 @@
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import {
   arrayUnion,
@@ -158,11 +157,14 @@ function Chat() {
     }
   };
 
+  const infoDetailHandler = (): void  => {
+    
+  }
+
   // console.log(chat);
 
   return (
-    <PerfectScrollbar>
-<div className="chatFlex border-l-2 border-r-2 border-none h-full flex flex-col">
+<div className="chatFlex border-l-2 border-r-2 border-none h-full w-[50%] flex flex-col">
       <div className="top px-4 pt-5 pb-3 flex items-center justify-between border-b-2 border-none">
         <div className="user flex items-center gap-5">
           <img
@@ -180,7 +182,7 @@ function Chat() {
         <div className="icons flex gap-5">
           <img className="w-5 h-5 hidden" src="./phone.png" alt="" />
           <img className="w-5 h-5 hidden" src="./video.png" alt="" />
-          <img className="w-5 h-5" src="./info.png" alt="" />
+          <img className="w-5 h-5" src="./info.png" onClick={infoDetailHandler} alt="" />
         </div>
       </div>
       <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-2">
@@ -265,7 +267,6 @@ function Chat() {
         </button>
       </div>
     </div>
-    </PerfectScrollbar>
     
   );
 }

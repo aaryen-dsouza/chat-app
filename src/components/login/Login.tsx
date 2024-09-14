@@ -52,6 +52,7 @@ function Login() {
         email as string,
         password as string
       );
+      toast.success("You have successfully Logged in");
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -64,6 +65,7 @@ function Login() {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     setRegisterLoading(true);
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
     const formData = new FormData(e.target as HTMLFormElement);
 
     const { username, email, password } = Object.fromEntries(formData);
@@ -103,6 +105,11 @@ function Login() {
       });
 
       toast.success("Account has been created! You can login now!");
+      
+      form.reset();
+      
+      setAvatar({ file: null, url: "" });
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
