@@ -93,7 +93,7 @@ try {
         })
     })
 
-    console.log(newChatRef.id);
+    // console.log(newChatRef.id);
     setAddMode(false);
     
 } catch (error) {

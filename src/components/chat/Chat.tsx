@@ -181,7 +181,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
           <div className="texts flex flex-col gap-0.5">
             <span className="text-lg font-bold">{user?.username}</span>
             <p className="text-xs font-normal text-gray-400">
-              Lorem ipsum dolor sit.
+              {user?.about}
             </p>
           </div>
         </div>
@@ -265,7 +265,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
           </div>
         </div>
         <button
-          className="sendButton bg-sendBtn text-white px-5 py-1.5 border-none rounded cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="sendButton bg-sendBtn text-white px-5 py-1.5 border-none rounded cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed hidden"
           onClick={handleMessageSend}
           disabled={isCurrentUserBlocked || isReceiverBlocked}
         >

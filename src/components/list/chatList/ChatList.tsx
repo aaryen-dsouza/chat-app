@@ -9,6 +9,7 @@ interface User {
   username: string;
   email: string;
   avatar: string;
+  about: string;
   id: string;
   blocked: string[];
 }
@@ -86,7 +87,7 @@ function ChatList() {
   }
 
   useEffect(() => {
-    console.log("triggered");
+    // console.log("triggered");
 
     if (input) {
       const filtered = chats.filter((c) =>

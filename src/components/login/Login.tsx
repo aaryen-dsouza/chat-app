@@ -96,6 +96,7 @@ function Login() {
         username,
         email,
         avatar: imgUrl,
+        about: "Hey! I am on the chat app",
         id: res.user.uid,
         blocked: [],
       });

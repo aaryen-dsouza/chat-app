@@ -35,7 +35,7 @@ function Detail({isDetailOpen}: DetailProps) {
       <div className="user px-7 py-5 flex flex-col items-center gap-3 border-b-2 border-none">
         <img className="w-[100px] h-[100px] rounded-full object-cover" src={user?.avatar || "./avatar.png"} alt="" />
         <h2 className="text-xl font-bold">{user?.username}</h2>
-        <p className="text-sm">Lorem ipsum dolor sit amet.</p>
+        <p className="text-sm">{user?.about}</p>
       </div>
       <div className="info p-5 flex flex-col gap-5">
         <div className="option hidden">

@@ -5,6 +5,7 @@ interface User {
   username: string;
   email: string;
   avatar: string;
+  about: string;
   id: string;
   blocked: string[];
 }
