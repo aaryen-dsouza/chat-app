@@ -207,10 +207,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
               alt=""
             /> */}
               {message.img && (
-                <img
-                  src={message.img}
-                  className="max-w-[380px] max-h-[244px] rounded-lg object-cover"
-                />
+                <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" src={message.img} />
               )}
               <p className="rounded-lg max-w-fit">{message.text}</p>
               {/* <span className="text-xs">1 min ago</span> */}
@@ -220,7 +217,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
         {img.url && (
           <div className="message own">
             <div className="texts">
-              <img src={img.url} alt="" />
+              <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" src={img.url} alt="" />
             </div>
           </div>
         )}

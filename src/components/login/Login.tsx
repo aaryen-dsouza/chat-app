@@ -121,7 +121,7 @@ function Login() {
   };
 
   return (
-    <div className="login w-full h-full flex items-center gap-[100px]">
+    <div className="login w-full h-full flex justify-around items-center">
       <div className="item flex-1 flex flex-col items-center gap-5">
         <h2 className="font-bold text-2xl">Welcome back</h2>
         <form

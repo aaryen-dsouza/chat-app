@@ -52,7 +52,11 @@ function UserInfo() {
           src={currentUser?.avatar || "./avatar.png"}
           alt=""
         />
+        <div className="flex flex-col">
         <h2 className="text-xl	font-bold">{currentUser?.username}</h2>
+        <p className="text-xs font-normal text-gray-400">{currentUser?.about}</p>
+        </div>
+        
       </div>
       <div className="flex gap-5">
         <Menu as="div" className="relative">
