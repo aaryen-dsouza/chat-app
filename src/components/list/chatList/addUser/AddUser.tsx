@@ -111,6 +111,7 @@ try {
           type="text"
           placeholder="Username"
           name="username"
+          autoFocus
           className="px-5 text-black rounded-lg border-none outline-none"
         />
         <button className="px-5 py-2 rounded-lg bg-blue-600 text-white border-none cursor-pointer">

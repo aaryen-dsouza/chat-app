@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddUser from "./addUser/AddUser";
 import { useUserStore } from "../../../lib/userStore";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
@@ -29,6 +29,8 @@ function ChatList() {
   const [filteredChats, setFilteredChats] = useState<ChatItem[]>([]);
   const [addMode, setAddMode] = useState<boolean>(false);
   const [input, setInput] = useState("");
+  const addUserRef = useRef<HTMLDivElement | null>(null);
+  const addUserButtonRef = useRef<HTMLImageElement | null>(null);
 
   const { currentUser } = useUserStore();
   const { changeChat } = useChatStore();
@@ -104,6 +106,25 @@ function ChatList() {
 
   // console.log(chats);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        addUserRef.current &&
+        !addUserRef.current.contains(event.target as Node) && addUserButtonRef.current &&
+        !addUserButtonRef.current.contains(event.target as Node)
+      ) {
+        setAddMode(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="flex items-center gap-5 p-5 border-b-2 border-none">
@@ -121,6 +142,7 @@ function ChatList() {
           src={addMode ? "./minus.png" : "./plus.png"}
           onClick={() => setAddMode((prev) => !prev)}
           alt=""
+          ref={addUserButtonRef}
         />
       </div>
       <div className="flex flex-col">
@@ -154,7 +176,10 @@ function ChatList() {
         </div>
       ))}
       </div>
+      <div ref={addUserRef}>
       {addMode && <AddUser setAddMode={setAddMode} />}
+      </div>
+      
     </div>
   );
 }

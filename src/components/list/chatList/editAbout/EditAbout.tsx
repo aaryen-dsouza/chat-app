@@ -1,4 +1,4 @@
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { db } from "../../../../lib/firebase";
 import { useUserStore } from "../../../../lib/userStore";
@@ -28,7 +28,7 @@ const EditAbout = ({setIsEditAboutOpen}: EditAboutProps) => {
     
     try {
       await updateDoc(userDocRef, {
-        about: arrayUnion(about),
+        about: about,
       });
 
       setIsEditAboutOpen(false);
@@ -50,6 +50,7 @@ const EditAbout = ({setIsEditAboutOpen}: EditAboutProps) => {
         <input
           type="text"
           placeholder="Eg: I am available"
+          autoFocus
           name="about"
           className="px-5 py-3 w-[300px] text-black rounded-lg border-none outline-none"
         />

@@ -64,9 +64,13 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
 
   const endRef = useRef<HTMLDivElement>(null);
 
+  const scrollToBottom = (): void => endRef.current?.scrollIntoView({ behavior: "smooth" });
+
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   }, [chat?.messages]);
+
+  const handleImageLoad = () => scrollToBottom()
 
   const handleEmoji = (e: EmojiClickData) => {
     console.log(e);
@@ -74,6 +78,8 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
     setText((prev) => prev + e.emoji);
     setEmojiOpen(false);
   };
+
+  
 
   useEffect(() => {
     if (!chatId) return;
@@ -207,7 +213,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
               alt=""
             /> */}
               {message.img && (
-                <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" src={message.img} />
+                <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" onLoad={handleImageLoad} src={message.img} />
               )}
               <p className="rounded-lg max-w-fit">{message.text}</p>
               {/* <span className="text-xs">1 min ago</span> */}
@@ -217,7 +223,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
         {img.url && (
           <div className="message own">
             <div className="texts">
-              <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" src={img.url} alt="" />
+              <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" onLoad={handleImageLoad} src={img.url} alt="" />
             </div>
           </div>
         )}
@@ -240,6 +246,7 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
         <input
           className="flex-1 bg-searchBar border-none outline-none text-white p-4 text-base rounded-lg disabled:cursor-not-allowed"
           type="text"
+          autoFocus
           placeholder={
             isCurrentUserBlocked || isReceiverBlocked
               ? "You cannot send a message"

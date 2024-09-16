@@ -17,12 +17,7 @@ function UserInfo() {
     toast.success("You have successfully Logged out");
   };
 
-  const handleAbout = () => {
-    console.log(isEditAboutOpen);
-    
-    setIsEditAboutOpen((prev) => !prev);
-    
-  };
+  const handleAbout = () => setIsEditAboutOpen((prev) => !prev);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
