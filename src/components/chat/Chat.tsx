@@ -1,10 +1,11 @@
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import 'react-perfect-scrollbar/dist/css/styles.css';
+import "react-perfect-scrollbar/dist/css/styles.css";
 import {
   arrayUnion,
   doc,
   getDoc,
   onSnapshot,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import {
@@ -23,7 +24,7 @@ interface Message {
   senderId: string | undefined;
   text: string;
   img?: string;
-  createdAt: number;
+  createdAt: Timestamp;
 }
 
 interface Chat {
@@ -46,7 +47,7 @@ interface ChatProps {
   isDetailOpen: boolean;
 }
 
-function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
+function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
   const [openEmoji, setEmojiOpen] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat | undefined>(undefined);
   const [text, setText] = useState("");
@@ -64,13 +65,14 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
 
   const endRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = (): void => endRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (): void =>
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
 
   useEffect(() => {
     scrollToBottom();
   }, [chat?.messages]);
 
-  const handleImageLoad = () => scrollToBottom()
+  const handleImageLoad = () => scrollToBottom();
 
   const handleEmoji = (e: EmojiClickData) => {
     console.log(e);
@@ -78,8 +80,6 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
     setText((prev) => prev + e.emoji);
     setEmojiOpen(false);
   };
-
-  
 
   useEffect(() => {
     if (!chatId) return;
@@ -168,15 +168,54 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
     }
   };
 
-
-  const infoDetailHandler = (): void  => {
+  const infoDetailHandler = (): void => {
     setIsDetailOpen((prev: boolean) => !prev);
-  }
+  };
 
   // console.log(chat);
 
+  const formatDate = (timestamp: Timestamp) => {
+    const messageDate = timestamp.toDate();
+    const today = new Date();
+    const yesterday = new Date();
+
+    yesterday.setDate(today.getDate() - 1);
+
+    const isToday =
+      messageDate.getDate() === today.getDate() &&
+      messageDate.getMonth() === today.getMonth() &&
+      messageDate.getFullYear() === today.getFullYear();
+
+      const isYesterday =
+        messageDate.getDate() === yesterday.getDate() &&
+        messageDate.getMonth() === yesterday.getMonth() &&
+        messageDate.getFullYear() === yesterday.getFullYear();
+
+      if(isToday) return "Today";
+      else if(isYesterday) return "Yesterday"
+      else return messageDate.toLocaleDateString("en-US", {
+      month: "long", // "January"
+      day: "numeric", // "10"
+      year: "numeric", // "2024"
+    });
+  };
+
+  const isDifferentDay = (
+    currentMessage: Message,
+    previousMessage?: Message
+  ) => {
+    if (!previousMessage) return true;
+    const currentDate = currentMessage.createdAt.toDate();
+    const previousDate = previousMessage.createdAt.toDate();
+    return (
+      currentDate.getFullYear() !== previousDate.getFullYear() ||
+      currentDate.getMonth() !== previousDate.getMonth() ||
+      currentDate.getDate() !== previousDate.getDate()
+    );
+  };
+
   return (
-<div className="chatFlex border-l-2 border-r-2 border-none h-full w-[50%] flex flex-col">
+    <div className="chatFlex border-l-2 border-r-2 border-none h-full w-[50%] flex flex-col">
       <div className="top px-4 pt-5 pb-3 flex items-center justify-between border-b-2 border-none">
         <div className="user flex items-center gap-5">
           <img
@@ -186,44 +225,81 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
           />
           <div className="texts flex flex-col gap-0.5">
             <span className="text-lg font-bold">{user?.username}</span>
-            <p className="text-xs font-normal text-gray-400">
-              {user?.about}
-            </p>
+            <p className="text-xs font-normal text-gray-400">{user?.about}</p>
           </div>
         </div>
         <div className="icons flex gap-5">
           <img className="w-5 h-5 hidden" src="./phone.png" alt="" />
           <img className="w-5 h-5 hidden" src="./video.png" alt="" />
-          <img className="w-5 h-5 cursor-pointer" src="./info.png" onClick={infoDetailHandler} alt="" />
+          <img
+            className="w-5 h-5 cursor-pointer"
+            src="./info.png"
+            onClick={infoDetailHandler}
+            alt=""
+          />
         </div>
       </div>
       <div className="center p-5 flex-1 overflow-y-auto flex flex-col gap-2">
-        {chat?.messages.map((message) => (
-          <div
-            className={`${
-              message.senderId === currentUser?.id ? "message own" : "message"
-            } max-w-[70%] flex gap-5`}
-            key={message?.createdAt}
-          >
-            <div className="texts flex-1 flex flex-col gap-1.5">
-              {/* <img className="w-full h-[300px] rounded-lg gap-1.5 object-cover" src="https://images.pexels.com/photos/27383302/pexels-photo-27383302/free-photo-of-a-lamp-with-a-wooden-base-and-a-lampshade.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="" /> */}
-              {/* <img
+        {chat?.messages.map((message, index) => {
+          const previousMessage = chat?.messages[index - 1];
+          const showDateSeparator = isDifferentDay(message, previousMessage);
+
+          return (
+            <div key={message?.createdAt.nanoseconds}>
+              <div className="flex justify-center">
+                {showDateSeparator && (
+                  <p className="rounded-xl addUserBDF my-5 text-sm px-3 py-1">
+                    {formatDate(message.createdAt)}
+                  </p>
+                )}
+              </div>
+
+              <div
+                className={`${
+                  message.senderId === currentUser?.id
+                    ? "message own"
+                    : "message"
+                } flex gap-5`}
+                key={message?.createdAt.nanoseconds}
+              >
+                <div className="texts flex-1 flex flex-col gap-1.5">
+                  {/* <img className="w-full h-[300px] rounded-lg gap-1.5 object-cover" src="https://images.pexels.com/photos/27383302/pexels-photo-27383302/free-photo-of-a-lamp-with-a-wooden-base-and-a-lampshade.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="" /> */}
+                  {/* <img
               className="w-full h-[300px] rounded-lg object-cover"
               src="https://images.pexels.com/photos/27906198/pexels-photo-27906198/free-photo-of-portrait-white-dress.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
               alt=""
             /> */}
-              {message.img && (
-                <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" onLoad={handleImageLoad} src={message.img} />
-              )}
-              <p className="rounded-lg max-w-fit">{message.text}</p>
-              {/* <span className="text-xs">1 min ago</span> */}
+                  {message.img && (
+                    <img
+                      className="max-w-[380px] max-h-[244px] rounded-lg object-cover"
+                      onLoad={handleImageLoad}
+                      src={message.img}
+                    />
+                  )}
+                  <p className="rounded-lg max-w-fit">
+                    {message.text}{" "}
+                    <span className="text-xxs text-slate-200 mt-3 ml-3 float-end">
+                      {message.createdAt &&
+                        message.createdAt.toDate().toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {img.url && (
           <div className="message own">
             <div className="texts">
-              <img className="max-w-[380px] max-h-[244px] rounded-lg object-cover" onLoad={handleImageLoad} src={img.url} alt="" />
+              <img
+                className="max-w-[380px] max-h-[244px] rounded-lg object-cover"
+                onLoad={handleImageLoad}
+                src={img.url}
+                alt=""
+              />
             </div>
           </div>
         )}
@@ -240,8 +316,16 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
             id="file"
             onChange={handleImg}
           />
-          <img className="w-5 h-5 cursor-pointer hidden" src="./camera.png" alt="" />
-          <img className="w-5 h-5 cursor-pointer hidden" src="./mic.png" alt="" />
+          <img
+            className="w-5 h-5 cursor-pointer hidden"
+            src="./camera.png"
+            alt=""
+          />
+          <img
+            className="w-5 h-5 cursor-pointer hidden"
+            src="./mic.png"
+            alt=""
+          />
         </div>
         <input
           className="flex-1 bg-searchBar border-none outline-none text-white p-4 text-base rounded-lg disabled:cursor-not-allowed"
@@ -264,7 +348,11 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
             alt=""
             onClick={() => setEmojiOpen((prev) => !prev)}
           />
-          <div className={`picker absolute bottom-[50px] ${isDetailOpen ? "left-0" : "right-0"} `}>
+          <div
+            className={`picker absolute bottom-[50px] ${
+              isDetailOpen ? "left-0" : "right-0"
+            } `}
+          >
             <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
           </div>
         </div>
@@ -277,7 +365,6 @@ function Chat({setIsDetailOpen, isDetailOpen}: ChatProps) {
         </button>
       </div>
     </div>
-    
   );
 }
 

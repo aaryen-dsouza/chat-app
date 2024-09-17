@@ -14,6 +14,9 @@ export default {
         textSub: "#9e9e9e",
         sendBtn: "#5183fe",
       },
+      fontSize: {
+        xxs: "0.625rem",
+      },
     },
   },
   plugins: [],

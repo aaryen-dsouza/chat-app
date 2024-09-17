@@ -148,8 +148,8 @@ function ChatList() {
       <div className="flex flex-col">
       {filteredChats.map((chat) => (
         <div
-          className={`flex self-center hover:bg-searchBar w-[90%] items-center gap-5 px-5 py-3 cursor-pointer border-b-2 border-none rounded-2xl ${
-            chat?.isSeen ? "bg-transparent" : "bg-blue-400 "
+          className={`flex self-center  w-[90%] items-center gap-5 px-5 py-3 cursor-pointer border-b-2 border-none rounded-2xl ${
+            chat?.isSeen ? "bg-transparent hover:bg-searchBar" : "bg-blue-400"
           }`}
           key={chat.chatId}
           onClick={() => handleSelect(chat)}
@@ -169,7 +169,9 @@ function ChatList() {
                 ? "User"
                 : chat.user.username}
             </span>
-            <p className="text-sm font-normal text-textSub">
+            <p className={`text-sm font-normal ${
+            chat?.isSeen ? "text-textSub" : "text-white"
+          }`}>
               {chat.lastMessage}
             </p>
           </div>
