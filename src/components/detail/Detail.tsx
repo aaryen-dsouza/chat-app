@@ -40,7 +40,7 @@ function Detail({isDetailOpen}: DetailProps) {
   return (
     <div className={`detailFlex w-[15%] ${isDetailOpen ? "" : "hidden"}`}>
       <div className="user px-7 py-5 flex flex-col items-center gap-3 border-b-2 border-none">
-        <img className="w-[100px] h-[100px] rounded-full object-cover" src={user?.avatar || "./avatar.png"} alt="" />
+        <img className="w-[100px] h-[100px] min-w-[100px] min-h-[100px] rounded-full object-cover" src={user?.avatar || "./avatar.png"} alt="" />
         <h2 className="text-xl font-bold">{user?.username}</h2>
         <p className="text-sm">{user?.about}</p>
       </div>

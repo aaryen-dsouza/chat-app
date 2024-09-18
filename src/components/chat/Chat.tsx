@@ -233,6 +233,7 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
     const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         setOtherUserStatus(docSnapshot.data().status);
+        console.log(docSnapshot.data().status);
       }
     });
 
@@ -252,8 +253,10 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
             alt=""
           />
           <div className="texts flex flex-col gap-0.5">
-            <span className="text-lg font-bold">{user?.username}</span>
-            <p className="text-xs font-normal text-gray-400">{otherUserStatus === "active" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-green-500 bg-green-500 cursor-pointer"></span> : otherUserStatus === "Offline" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-gray-500 bg-gray-500"></span> : <span className="inline-block w-2 h-2 rounded-full mr-1  border-yellow-400 bg-yellow-400"></span>}  {user?.about} </p>
+            <span className="text-lg font-bold">{user?.username} {<span className="text-xs font-light text-gray-200 ml-2" >{otherUserStatus}</span>
+            // otherUserStatus === "active" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-green-500 bg-green-500 cursor-pointer"></span> : otherUserStatus === "Offline" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-gray-500 bg-gray-500"></span> : <span className="inline-block w-2 h-2 rounded-full mr-1  border-yellow-400 bg-yellow-400"></span>
+            }</span>
+            <p className="text-xs font-normal text-gray-400">{user?.about} </p>
           </div>
         </div>
         <div className="icons flex gap-5">

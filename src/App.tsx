@@ -33,11 +33,11 @@ useEffect(() => {
     if(!currentUser) return;
 
     const handleTabFocus = () => {
-      updateUserStatus(currentUser.id, "active");
+      updateUserStatus(currentUser.id, "Online");
     }
 
     const handleTabBlur = () => {
-      updateUserStatus(currentUser.id, "away");
+      updateUserStatus(currentUser.id, "Away");
     }
 
     // const handleWindowClose = () => {

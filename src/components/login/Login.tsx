@@ -56,7 +56,7 @@ function Login() {
         password as string
       );
       toast.success("You have successfully Logged in");
-      updateUserStatus(currentUser?.id as string, "active")
+      updateUserStatus(currentUser?.id as string, "Online")
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
