@@ -7,6 +7,7 @@ interface User {
   avatar: string;
   about: string;
   id: string;
+  status: string;
   blocked: string[];
 }
 

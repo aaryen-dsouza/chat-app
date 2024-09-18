@@ -11,7 +11,7 @@ import { useChatStore } from "./lib/chatStore";
 
 
 function App() {
-const {currentUser, isLoading, fetchUserInfo} = useUserStore();
+const {currentUser, isLoading, fetchUserInfo, updateUserStatus} = useUserStore();
 
 const {chatId} = useChatStore();
 
@@ -27,8 +27,34 @@ const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
     };
   }, [fetchUserInfo]);
 
+  
 
-  // console.log(currentUser);
+useEffect(() => {
+    if(!currentUser) return;
+
+    const handleTabFocus = () => {
+      updateUserStatus(currentUser.id, "active");
+    }
+
+    const handleTabBlur = () => {
+      updateUserStatus(currentUser.id, "away");
+    }
+
+    // const handleWindowClose = () => {
+    //   updateUserStatus(currentUser.id, "offline")
+    // }
+
+    window.addEventListener("focus", handleTabFocus);
+    window.addEventListener("blur", handleTabBlur);
+    // window.addEventListener("beforeunload", handleWindowClose);
+
+    return () => {
+      window.removeEventListener("focus", handleTabFocus);
+    window.removeEventListener("blur", handleTabBlur);
+    // window.removeEventListener("beforeunload", handleWindowClose);
+    }
+  }, [currentUser]);
+
   
 if(isLoading) return <div className="loading p-7 text-4xl rounded-lg bg-chatscreen2">Loading...</div>
 

@@ -11,6 +11,7 @@ interface User {
   avatar: string;
   about: string;
   id: string;
+  status: string;
   blocked: string[];
 }
 
@@ -155,7 +156,7 @@ function ChatList() {
           onClick={() => handleSelect(chat)}
         >
           <img
-            className="w-[50px] h-[50px] rounded-full object-cover"
+            className="min-w-[50px] min-h-[50px] w-[50px] h-[50px] rounded-full object-cover"
             src={
               chat.user.blocked.includes(currentUser!.id)
                 ? "./avatar.png"
@@ -169,7 +170,7 @@ function ChatList() {
                 ? "User"
                 : chat.user.username}
             </span>
-            <p className={`text-sm font-normal ${
+            <p className={`text-sm font-normal whitespace-nowrap 2xl:max-w-[280px] xl:max-w-[200px] lg:max-w-[150px] md:max-w-[100px] sm:max-w-[50px] max-w-[30px] text-ellipsis overflow-hidden ${
             chat?.isSeen ? "text-textSub" : "text-white"
           }`}>
               {chat.lastMessage}

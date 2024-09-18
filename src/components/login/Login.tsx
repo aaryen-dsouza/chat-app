@@ -7,6 +7,7 @@ import {
 import { auth, db } from "../../lib/firebase";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import upload from "../../lib/upload";
+import { useUserStore } from "../../lib/userStore";
 
 interface avatarInterface {
   file: File | null;
@@ -22,6 +23,8 @@ function Login() {
     file: null,
     url: "",
   });
+
+  const {currentUser, updateUserStatus} = useUserStore();
 
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
@@ -53,6 +56,7 @@ function Login() {
         password as string
       );
       toast.success("You have successfully Logged in");
+      updateUserStatus(currentUser?.id as string, "active")
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -105,7 +109,7 @@ function Login() {
         chats: [],
       });
 
-      toast.success("Account has been created! You can login now!");
+      toast.success("Account has been created! You have been logged in now!");
       
       form.reset();
       

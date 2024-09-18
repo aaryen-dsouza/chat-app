@@ -93,6 +93,7 @@ body {
   .texts {
     p {
       padding: 4px 10px;
+      align-self: flex-start;
       /* background-color: rgba(17, 25, 40, 0.75); */
       background-color: #2e333d;
       border-bottom-left-radius: 0 0;

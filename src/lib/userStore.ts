@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { db } from './firebase'
-import { doc, onSnapshot  } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 interface User {
     username: string;
@@ -8,6 +8,7 @@ interface User {
     avatar: string;
     about: string;
     id: string;
+    status: string;
     blocked: string[];
   }
   
@@ -16,7 +17,9 @@ interface User {
     isLoading: boolean;
     // fetchUserInfo: (uid: string) => Promise<void>;
     fetchUserInfo: (uid: string) => void;
+    // setUserStatus: (uid: string, status: string) => Promise<void>;
     unsubscribeUserInfo: () => void;
+    updateUserStatus: (uid: string, status: string) => Promise<void>;
   }
 
   let unsubscribe: (() => void) | null = null;
@@ -40,7 +43,14 @@ export const useUserStore = create<UserStore>((set) => ({
   //           return set({currentUser: null, isLoading: false})
   //       }
   // }
-  fetchUserInfo: (uid: string) => {
+  // updateUserStatus : async (uid: string, status: string) => {
+  //   const userRef = doc(db, "users", uid);
+  //   await updateDoc(userRef, {
+  //     status, // Update the user's status
+  //     lastSeen: serverTimestamp(), // Update the last seen time
+  //   });
+  // },
+  fetchUserInfo(uid: string) {
     if (!uid) return set({ currentUser: null, isLoading: false });
 
     const docRef = doc(db, "users", uid);
@@ -50,6 +60,8 @@ export const useUserStore = create<UserStore>((set) => ({
     }
 
     set({ isLoading: true });
+
+    // this.updateUserStatus(uid, "active");
 
     unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -63,11 +75,21 @@ export const useUserStore = create<UserStore>((set) => ({
       set({ currentUser: null, isLoading: false });
     });
   },
-
   unsubscribeUserInfo: () => {
     if (unsubscribe) {
       unsubscribe();
       unsubscribe = null;
+    }
+  },
+  async updateUserStatus (cUser: string, userStatus: string): Promise<void> {
+    const userDocRef = doc(db, "users", cUser);
+    
+    try {
+      await updateDoc(userDocRef, {
+        status: userStatus,
+      });
+    } catch(err) { 
+    if(err instanceof Error) console.log(err)
     }
   }
 }))

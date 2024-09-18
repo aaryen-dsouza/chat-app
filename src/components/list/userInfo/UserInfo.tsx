@@ -10,10 +10,11 @@ function UserInfo() {
   const editButtonRef = useRef<HTMLImageElement | null>(null);
 
 
-  const { currentUser } = useUserStore();
+  const { currentUser, updateUserStatus } = useUserStore();
 
-  const optionClickHandler = () => {
-    auth.signOut();
+  const optionClickHandler = async () => {
+    if(currentUser) await updateUserStatus(currentUser.id, "Offline");
+    await auth.signOut();
     toast.success("You have successfully Logged out");
   };
 
@@ -43,7 +44,7 @@ function UserInfo() {
 <div className="p-5 flex items-center justify-between">
       <div className="flex items-center gap-5">
         <img
-          className="w-[50px] h-[50px] rounded-[50%] object-cover"
+          className="w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-[50%] object-cover"
           src={currentUser?.avatar || "./avatar.png"}
           alt=""
         />

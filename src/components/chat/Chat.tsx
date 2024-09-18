@@ -47,6 +47,14 @@ interface ChatProps {
   isDetailOpen: boolean;
 }
 
+// const updateUserStatus = async (uid: string, status: string) => {
+//   const userRef = doc(db, "users", uid);
+//   await updateDoc(userRef, {
+//     status,
+//     lastSeen: serverTimestamp(),
+//   });
+// };
+
 function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
   const [openEmoji, setEmojiOpen] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat | undefined>(undefined);
@@ -63,6 +71,8 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
     useChatStore();
   const { currentUser } = useUserStore();
 
+  const [otherUserStatus, setOtherUserStatus] = useState(user?.status);
+
   const endRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = (): void =>
@@ -75,7 +85,7 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
   const handleImageLoad = () => scrollToBottom();
 
   const handleEmoji = (e: EmojiClickData) => {
-    console.log(e);
+    // console.log(e);
 
     setText((prev) => prev + e.emoji);
     setEmojiOpen(false);
@@ -193,11 +203,15 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
 
       if(isToday) return "Today";
       else if(isYesterday) return "Yesterday"
-      else return messageDate.toLocaleDateString("en-US", {
+      else if(messageDate.getFullYear === today.getFullYear) return messageDate.toLocaleDateString("en-US", {
       month: "long", // "January"
       day: "numeric", // "10"
-      year: "numeric", // "2024"
     });
+      else return messageDate.toLocaleDateString("en-US", {
+        month: "long", // "January"
+        day: "numeric", // "10"
+        year: "numeric", // "2024"
+      });
   };
 
   const isDifferentDay = (
@@ -214,6 +228,20 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
     );
   };
 
+  useEffect(() => {
+    const userRef = doc(db, "users", user?.id as string);
+    const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        setOtherUserStatus(docSnapshot.data().status);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user, user?.status]);
+  
+
   return (
     <div className="chatFlex border-l-2 border-r-2 border-none h-full w-[50%] flex flex-col">
       <div className="top px-4 pt-5 pb-3 flex items-center justify-between border-b-2 border-none">
@@ -225,7 +253,7 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
           />
           <div className="texts flex flex-col gap-0.5">
             <span className="text-lg font-bold">{user?.username}</span>
-            <p className="text-xs font-normal text-gray-400">{user?.about}</p>
+            <p className="text-xs font-normal text-gray-400">{otherUserStatus === "active" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-green-500 bg-green-500 cursor-pointer"></span> : otherUserStatus === "Offline" ? <span className="inline-block mr-1 w-2 h-2 rounded-full border-gray-500 bg-gray-500"></span> : <span className="inline-block w-2 h-2 rounded-full mr-1  border-yellow-400 bg-yellow-400"></span>}  {user?.about} </p>
           </div>
         </div>
         <div className="icons flex gap-5">
@@ -276,7 +304,7 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
                       src={message.img}
                     />
                   )}
-                  <p className="rounded-lg max-w-fit">
+                  <p className="rounded-lg sm:max-w-[60%] max-w-fit">
                     {message.text}{" "}
                     <span className="text-xxs text-slate-200 mt-3 ml-3 float-end">
                       {message.createdAt &&
