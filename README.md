@@ -23,6 +23,7 @@ A modern, real-time chat application built with React, TypeScript, Firebase, and
 - **Vite.js:** Fast build tool and development server for a modern frontend experience.
 
 ## 📂 Project Structure
+```bash
 .
 ├── README.md
 ├── eslint.config.js
@@ -47,6 +48,7 @@ A modern, real-time chat application built with React, TypeScript, Firebase, and
 ├── tailwind.config.js       # Tailwind CSS configuration
 ├── tsconfig.json            # TypeScript configuration
 └── vite.config.ts           # Vite configuration
+```
 
 ## 🚀 Getting Started
 
