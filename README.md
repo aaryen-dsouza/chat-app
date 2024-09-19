@@ -23,7 +23,30 @@ A modern, real-time chat application built with React, TypeScript, Firebase, and
 - **Vite.js:** Fast build tool and development server for a modern frontend experience.
 
 ## 📂 Project Structure
-. ├── README.md ├── eslint.config.js ├── index.html ├── package.json ├── postcss.config.js ├── public │ ├── *.png, *.jpg, *.svg # Image assets for the app ├── src │ ├── App.tsx │ ├── assets # Asset management │ ├── components # Reusable UI components │ │ ├── chat # Chat-related components │ │ ├── detail # Detail view components │ │ ├── list # List view components │ │ ├── login # Login component │ │ └── notification # Notification management │ ├── index.css # Global styles │ ├── lib # Firebase, Zustand, and utility functions │ ├── main.tsx # Entry point of the application │ └── vite-env.d.ts ├── tailwind.config.js # Tailwind CSS configuration ├── tsconfig.json # TypeScript configuration └── vite.config.ts # Vite configuration
+.
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── *.png, *.jpg, *.svg  # Image assets for the app
+├── src
+│   ├── App.tsx
+│   ├── assets               # Asset management
+│   ├── components           # Reusable UI components
+│   │   ├── chat             # Chat-related components
+│   │   ├── detail           # Detail view components
+│   │   ├── list             # List view components
+│   │   ├── login            # Login component
+│   │   └── notification     # Notification management
+│   ├── index.css            # Global styles
+│   ├── lib                  # Firebase, Zustand, and utility functions
+│   ├── main.tsx             # Entry point of the application
+│   └── vite-env.d.ts
+├── tailwind.config.js       # Tailwind CSS configuration
+├── tsconfig.json            # TypeScript configuration
+└── vite.config.ts           # Vite configuration
 
 ## 🚀 Getting Started
 
