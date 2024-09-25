@@ -324,16 +324,16 @@ function Chat({ setIsDetailOpen, isDetailOpen }: ChatProps) {
     }
   };
 
-  const handleEditSubmit = async () => {
-    if (editingMessage) {
-      await handleEditMessage(
-        editingMessage.createdAt.nanoseconds.toString(),
-        text
-      );
-      setEditingMessage(null);
-      setText("");
-    }
-  };
+  // const handleEditSubmit = async () => {
+  //   if (editingMessage) {
+  //     await handleEditMessage(
+  //       editingMessage.createdAt.nanoseconds.toString(),
+  //       text
+  //     );
+  //     setEditingMessage(null);
+  //     setText("");
+  //   }
+  // };
 
   const handleDeleteMessage = async (messageId: string) => {
     if (!chatId) return;
