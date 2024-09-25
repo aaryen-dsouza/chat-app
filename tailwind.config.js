@@ -13,6 +13,7 @@ export default {
         bgBlacker: "#131313",
         textSub: "#9e9e9e",
         sendBtn: "#5183fe",
+        addUserBDFH: "rgba(46, 51, 61, 0.1)",
       },
       fontSize: {
         xxs: "0.625rem",

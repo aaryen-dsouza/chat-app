@@ -5,7 +5,14 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../lib/firebase";
-import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import upload from "../../lib/upload";
 import { useUserStore } from "../../lib/userStore";
 
@@ -24,7 +31,7 @@ function Login() {
     url: "",
   });
 
-  const {currentUser, updateUserStatus} = useUserStore();
+  const { currentUser, updateUserStatus } = useUserStore();
 
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
@@ -46,17 +53,34 @@ function Login() {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-
     const { email, password } = Object.fromEntries(formData);
+
+    let loginEmail = email as string;
+
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(loginEmail)) {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("username", "==", loginEmail));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        loginEmail = userDoc.data().email;
+      } else {
+        toast.warn("Please enter a valid email or username");
+        setLoginLoading(false);
+        return;
+      }
+    }
 
     try {
       await signInWithEmailAndPassword(
         auth,
-        email as string,
+        loginEmail as string,
         password as string
       );
       toast.success("You have successfully Logged in");
-      updateUserStatus(currentUser?.id as string, "Online")
+      updateUserStatus(currentUser?.id as string, "Online");
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -77,7 +101,10 @@ function Login() {
     // VALIDATE INPUTS
     if (!username || !email || !password)
       return toast.warn("Please enter inputs!");
-    if (!avatar.file) return toast.warn("Please upload an avatar!");
+    if (!avatar.file) {
+      setRegisterLoading(false);
+      return toast.warn("Please upload an avatar!");
+    }
 
     // VALIDATE UNIQUE USERNAME
     const usersRef = collection(db, "users");
@@ -110,11 +137,10 @@ function Login() {
       });
 
       toast.success("Account has been created! You have been logged in now!");
-      
-      form.reset();
-      
-      setAvatar({ file: null, url: "" });
 
+      form.reset();
+
+      setAvatar({ file: null, url: "" });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -135,7 +161,6 @@ function Login() {
         >
           <input
             className="px-8 py-3 border-none outline-none bg-background text-white rounded"
-            type="email"
             placeholder="Email or Username"
             name="email"
           />

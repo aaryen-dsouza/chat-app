@@ -82,6 +82,7 @@ body {
     .texts {
       p {
         /* background-color: #5183fe; */
+        padding: 1px 15px 15px 10px;
         background-color: #6b8afd;
         align-self: flex-end;
         border-bottom-left-radius: 0.5rem;
@@ -92,7 +93,7 @@ body {
 
   .texts {
     p {
-      padding: 4px 10px;
+      padding: 1px 5px 15px 10px;
       align-self: flex-start;
       /* background-color: rgba(17, 25, 40, 0.75); */
       background-color: #2e333d;
@@ -104,4 +105,8 @@ body {
 .addUserBDF {
   backdrop-filter: saturate(180%) blur(20px);
   background-color: rgba(46, 51, 61, 0.4);
+}
+
+.max-w-fit-plus-30 {
+  max-width: calc(fit-content + 50px);
 }
